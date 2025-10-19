@@ -10,6 +10,7 @@
   list-style: none;
   display: flex;
   gap: 15px;
+  cursor: pointer;
 }
 .nav-links a {
   color: white;
