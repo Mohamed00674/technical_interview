@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 
 @Component({
@@ -7,22 +8,28 @@ import { Router } from '@angular/router';
   styleUrls: ['./footer.component.css'],
 })
 export class FooterComponent implements OnInit {
-  currYear: Number = 0;
-  pathName: String = '';
+  currYear: number = 0;
+  pathName: string = '';
+  isBrowser = false;
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {}
 
   ngOnInit(): void {
-    this.pathName = window.location.pathname;
-    this.currYear = this.getCurrentYear();
-  }
+    this.isBrowser = isPlatformBrowser(this.platformId);
 
-  getCurrentYear() {
-    const year = new Date().getFullYear();
-    return year;
+    if (this.isBrowser) {
+      this.pathName = window.location.pathname;
+    }
+
+    this.currYear = new Date().getFullYear();
   }
 
   backToTop() {
-    document.body.scrollTop = document.documentElement.scrollTop = 0;
+    if (this.isBrowser) {
+      document.body.scrollTop = document.documentElement.scrollTop = 0;
+    }
   }
 }
