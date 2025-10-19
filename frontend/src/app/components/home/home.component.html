@@ -1,0 +1,16 @@
+<section class="blogs">
+  <div class="blog-card" *ngFor="let blog of blogs">
+    <h2>{{ blog.title }}</h2>
+    <p>{{ blog.content }}</p>
+
+    <div class="comments">
+      <h4>Comments</h4>
+      <div class="comment" *ngFor="let comment of blog.comments">
+        <p>{{ comment }}</p>
+      </div>
+
+      <textarea [(ngModel)]="newComment" placeholder="Add a comment..."></textarea>
+      <button (click)="addComment(blog)">Post</button>
+    </div>
+  </div>
+</section>
