@@ -5,11 +5,39 @@
 
     <div class="comments">
       <h4>Comments</h4>
-      <div class="comment" *ngFor="let comment of blog.comments">
-        <p>{{ comment }}</p>
+
+      <div class="comment" *ngFor="let comment of blog.comments || []">
+        <p>
+          <strong>{{ comment.author?.username || "Anonymous" }}:</strong>
+          {{ comment.content }}
+        </p>
+        <small>{{ comment.createdAt | date : "short" }}</small>
+
+        <div class="replies" *ngIf="comment.replies?.length">
+          <div class="reply" *ngFor="let reply of comment.replies">
+            <p>
+              <strong>{{ reply.author?.username || "Anonymous" }}:</strong>
+              {{ reply.content }}
+            </p>
+            <small>{{ reply.createdAt | date : "short" }}</small>
+
+            <div class="replies" *ngIf="reply.replies?.length">
+              <div class="reply" *ngFor="let nested of reply.replies">
+                <p>
+                  <strong>{{ nested.author?.username || "Anonymous" }}:</strong>
+                  {{ nested.content }}
+                </p>
+                <small>{{ nested.createdAt | date : "short" }}</small>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <textarea [(ngModel)]="newComment" placeholder="Add a comment..."></textarea>
+      <textarea
+        [(ngModel)]="newComment[blog._id!]"
+        placeholder="Add a comment..."
+      ></textarea>
       <button (click)="addComment(blog)">Post</button>
     </div>
   </div>
