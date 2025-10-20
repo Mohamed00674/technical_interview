@@ -106,7 +106,6 @@ export const refreshToken = async (refreshToken: string) => {
         message: `User '${decoded.id}' not found.`,
       };
 
-    // issue new tokens
     const newToken = jwt.sign(
       { id: user._id, roles: user.roles },
       JWT_SECRET as Secret,

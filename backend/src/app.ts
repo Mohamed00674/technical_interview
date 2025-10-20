@@ -1,5 +1,7 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
+import userRoutes from './modules/user/user.routes';
+
 
 import { EnvConfig } from "./config/env";
 
@@ -28,5 +30,8 @@ app.get("/health", (_req: Request, res: Response) => {
     message: "Server is running",
   });
 });
+
+app.use('/api/user', userRoutes);
+
 
 export default app;
