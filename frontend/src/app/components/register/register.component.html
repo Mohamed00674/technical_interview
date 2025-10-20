@@ -1,9 +1,25 @@
 <div class="auth-container">
   <h2>Register</h2>
-  <form>
-    <input type="text" placeholder="Name" [(ngModel)]="name" name="name">
-    <input type="email" placeholder="Email" [(ngModel)]="email" name="email">
-    <input type="password" placeholder="Password" [(ngModel)]="password" name="password">
-    <button type="submit">Register</button>
+  <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
+    <input type="text" placeholder="Username" formControlName="username">
+    <div *ngIf="registerForm.get('username')?.invalid && registerForm.get('username')?.touched" style="color:red">
+      Username is required (min 3 characters)
+    </div>
+
+    <input type="text" placeholder="Fullname" formControlName="fullname">
+    <div *ngIf="registerForm.get('fullname')?.invalid && registerForm.get('fullname')?.touched" style="color:red">
+      Fullname is required
+    </div>
+
+    <input type="password" placeholder="Password" formControlName="password">
+    <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" style="color:red">
+      Password is required (min 6 characters)
+    </div>
+
+    <br>
+    <button type="submit" [disabled]="registerForm.invalid">Register</button>
   </form>
+
+  <p *ngIf="message" style="color: green">{{ message }}</p>
+  <p *ngIf="error" style="color: red">{{ error }}</p>
 </div>

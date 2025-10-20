@@ -1,8 +1,20 @@
 <div class="auth-container">
   <h2>Login</h2>
-  <form>
-    <input type="email" placeholder="Email" [(ngModel)]="email" name="email">
-    <input type="password" placeholder="Password" [(ngModel)]="password" name="password"><br>
-    <button type="submit">Login</button>
+  <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+    <input type="text" placeholder="Username" formControlName="username">
+    <div *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched" style="color:red">
+      Username is required
+    </div>
+
+    <input type="password" placeholder="Password" formControlName="password">
+    <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" style="color:red">
+      Password is required
+    </div>
+
+    <br>
+    <button type="submit" [disabled]="loginForm.invalid">Login</button>
   </form>
+
+  <p *ngIf="message" style="color: green">{{ message }}</p>
+  <p *ngIf="error" style="color: red">{{ error }}</p>
 </div>
