@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { BlogService } from '../../core/services/blog.service';
+import { Blog, BlogComment } from '../../core/models/blog.model';
 
 @Component({
   selector: 'app-home',
@@ -9,27 +11,40 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
 })
-export class HomeComponent {
-  blogs = [
-    {
-      id: 1,
-      title: 'First Blog',
-      content: 'This is my first post.',
-      comments: ['Nice!', 'Welcome!'],
-    },
-    {
-      id: 2,
-      title: 'Angular 17 Tips',
-      content: 'Angular 17 is awesome!',
-      comments: ['Totally agree!'],
-    },
-  ];
-  newComment = '';
+export class HomeComponent implements OnInit {
+  blogs: Blog[] = [];
+  newComment: { [blogId: string]: string } = {};
+  userRoles: string[] = [];
 
-  addComment(blog: any) {
-    if (this.newComment.trim()) {
-      blog.comments.push(this.newComment);
-      this.newComment = '';
-    }
+  constructor(private blogService: BlogService) {}
+
+  ngOnInit(): void {
+    this.loadBlogs();
+  }
+
+  loadBlogs() {
+    this.blogService.fetchAllBlogs().subscribe({
+      next: (blogs) => {
+        this.blogs = blogs.map((b) => ({
+          ...b,
+          comments: Array.isArray(b.comments) ? b.comments : [],
+        }));
+      },
+      error: (err) => console.error(err),
+    });
+  }
+
+  addComment(blog: Blog) {
+    const content = this.newComment[blog._id!];
+    if (!content?.trim()) return;
+
+    this.blogService.addComment(blog._id!, content).subscribe({
+      next: (comment) => {
+        blog.comments = blog.comments || [];
+        blog.comments.push(comment);
+        this.newComment[blog._id!] = '';
+      },
+      error: (err) => console.error(err),
+    });
   }
 }
